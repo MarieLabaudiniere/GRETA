@@ -77,16 +77,15 @@ include('./fonctions/marqueUse.php');
             </div>
             <div class="row">
                 <div class="col">
-                    <input type="submit" name="searchAdvance" id="search-advance" 
-                    onclick="controlPeriode('date_debut_resa', 'date_fin_resa')" tabindex="4" class="form-control btn-secondary" value="Rechercher">
+                    <input type="submit" name="searchAdvance" id="search-advance" onclick="controlPeriode('date_debut_resa', 'date_fin_resa')" tabindex="4" class="form-control btn-secondary" value="Rechercher">
                 </div>
             </div>
     </form>
 </div>
 <?php
 //CAS DE LA CREATION D'UNE RESA
-if(isset($_POST['creationResa'])) {
-    if(createResa($pdo, $_POST)){ //la création en BD s'est bien passé
+if (isset($_POST['creationResa'])) {
+    if (createResa($pdo, $_POST)) { //la création en BD s'est bien passé
         echo "<p>votre réservation a bien été prise en compte</p>";
     } else {
         echo "<p>Une erreur a bloqué la prise en compte de votre réseravtion, veuillez recommencer</p>";
@@ -104,15 +103,18 @@ if (isset($_POST['fastSearch'])) {
                     <thead class=\"thead-light\">
                         <tr>
                         <th>Libellé mat</th>
-                        <th>Réserver</th>
+                        <th>Réservation rapide</th>
+                        <th>Réservation</th>
                         </tr>
                         </thead>
                     <tbody>";
             foreach ($results as $result) {
+                $idMat = $result['ID_MAT'];
                 echo "<tr>";
                 echo "<td>" . $result['LIBELLE_MAT'] . "</td>";
-                echo '<td><a href="#" onclick="reportData(' . $result['ID_MAT'] . ',\''
-                . $result['LIBELLE_MAT'] . '\',\'\',\'\')" data-toggle="modal" data-target="#popup"><img src="./public/medias/calendar-check.svg"></a></td>';
+                echo '<td><a href="#" onclick="reportData(' . $idMat . ',\''
+                    . $result['LIBELLE_MAT'] . '\',\'\',\'\')" data-toggle="modal" data-target="#popup"><img src="./public/medias/calendar-check.svg"></a></td>';
+                echo '<td><a href="index.php?page=reservationCalendar&id_mat=' . $idMat . '"><img src="./public/medias/calendar.svg"></a></td>';
                 echo "<tr>";
             }
             echo "</table></div>";
@@ -133,16 +135,19 @@ if (isset($_POST['searchAdvance'])) {
                     <thead class=\"thead-light\">
                         <tr>
                         <th>Libellé mat</th>
-                        <th>Réserver</th>
+                        <th>Réservation rapide</th>
+                        <th>Réservation</th>
                         </tr>
                         </thead>
                     <tbody>";
         foreach ($results as $result) {
+            $idMat = $result['ID_MAT'];
             echo "<tr>";
             echo "<td>" . $result['LIBELLE_MAT'] . "</td>";
-            echo '<td><a href="#" onclick="reportData(' . $result['ID_MAT'] . ',\''
+            echo '<td><a href="#" onclick="reportData(' . $idMat . ',\''
                 . $result['LIBELLE_MAT'] . '\',\'' . $_POST['date_debut_resa'] . '\',\''
                 . $_POST['date_fin_resa'] . '\')" data-toggle="modal" data-target="#popup"><img src="./public/medias/calendar-check.svg"></a></td>';
+            echo '<td><a href="index.php?page=reservationCalendar&id_mat=' . $idMat . '"><img src="./public/medias/calendar.svg"></a></td>';
             echo "<tr>";
         }
         echo "</table></div>";

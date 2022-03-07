@@ -7,3 +7,8 @@ footer {
     vertical-align: top;
     font-size: 9px;
 }
+
+#calendar {
+    width: 50%;
+    margin: 20% auto;
+}
