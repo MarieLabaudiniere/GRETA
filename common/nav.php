@@ -28,7 +28,7 @@
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar1" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
-    <div class="collapse navbar-collapse" id="navbar1">
+    <div class="collapse navbar-collapse mr-5" id="navbar1">
         <ul class="navbar-nav ml-auto">
             <?php 
             
@@ -50,8 +50,8 @@
                     <a class="nav-link  dropdown-toggle" href="#" data-toggle="dropdown">Réservation </a>
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="index.php?page=home
-                        "> Mes réservations</a></li>
-                        <li><a class="dropdown-item" href="index.php?page=reservation"> Nouvelles réservations</a></li>
+                        ">Mes réservations</a></li>
+                        <li><a class="dropdown-item" href="index.php?page=reservation">Nouvelles réservations</a></li>
                     </ul>
                 </li>
             <?php } else {
