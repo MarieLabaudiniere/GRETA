@@ -40,3 +40,6 @@
         </div>
     </div>
 </div>
+<script>
+    $('#confirm-password').change();
+</script>
