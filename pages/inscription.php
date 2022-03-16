@@ -8,22 +8,22 @@
                         <div class="col-lg-12">
                             <form id="register-form" action="index.php?page=register" method="post" role="form">
                                 <div class="form-group">
-                                    <input type="text" name="username" id="username" tabindex="1" class="form-control" placeholder="Username" value="" required="true">
+                                    <input type="text" name="username" id="username" tabindex="1" class="form-control" placeholder="Username" value="">
                                 </div>
                                 <div class="form-group">
-                                    <input type="text" name="firstname" id="firstname" tabindex="1" class="form-control" placeholder="prénom" value="" required="true">
+                                    <input type="text" name="firstname" id="firstname" tabindex="1" class="form-control" placeholder="prénom" value="">
                                 </div>
                                 <div class="form-group">
-                                    <input type="text" name="lastname" id="lastname" tabindex="1" class="form-control" placeholder="nom de famille" value="" required="true">
+                                    <input type="text" name="lastname" id="lastname" tabindex="1" class="form-control" placeholder="nom de famille" value="">
                                 </div>
                                 <div class="form-group">
-                                    <input type="email" name="email" id="email" tabindex="1" class="form-control" placeholder="Email Address" value="" required="true">
+                                    <input type="email" name="email" id="email" tabindex="1" class="form-control" placeholder="Email Address" value="">
                                 </div>
                                 <div class="form-group">
-                                    <input type="password" name="password" id="password" tabindex="2" class="form-control" placeholder="Password" required="true">
+                                    <input type="password" name="password" id="password" tabindex="2" class="form-control" placeholder="Password">
                                 </div>
                                 <div class="form-group">
-                                    <input type="password" name="confirm-password" id="confirm-password" tabindex="2" class="form-control" placeholder="Confirm Password">
+                                    <input type="password" name="confirm_password" id="confirm_password" tabindex="2" class="form-control" placeholder="Confirm Password">
                                 </div>
                                 <div class="form-group">
                                     <div class="row justify-content-center">
@@ -41,5 +41,54 @@
     </div>
 </div>
 <script>
-    $('#confirm-password').change();
+    
+    $('#register-form').validate({
+        rules: {
+            username: {
+                required: true,
+                minlength: 2
+            },
+            firstname: {
+                required: true,
+                minlength: 2
+            },
+            lastname: {
+                required: true,
+                minlength: 2
+            },
+            email: {
+                //email: true,
+                maxlength: 255
+            },
+            password: {
+                required: true,
+            },
+            confirm_password: {
+                required: true,
+                equalTo: "#password"
+            }
+        },
+        messages: {
+            confirm_password: {
+                equalTo: "Vous devez saisir le même mot de passe."
+            }
+        },
+        errorClass: "invalid",
+        //onsubmit: false,
+        submitHandler: function(form) {
+            if (form.valid()) {
+                form.submit();
+            }
+            return false;
+        }
+    });
+    $.validator.addMethod('email', function(value) {
+        if (value.length > 0) {
+            return /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(value);
+        }
+        return true;
+    }, 'le format de l\'email est invalide.');
+    $.validator.addMethod('password', function(value) {
+        return /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^a-zA-Z\d])\S{12,50}$/.test(value);
+    }, 'Le mot de passe doit avoir plus de 12 caractères, au moins une majuscule, une minuscule, un chiffre et un caractère spécial');
 </script>

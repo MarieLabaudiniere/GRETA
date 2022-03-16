@@ -12,3 +12,14 @@ footer {
     width: 50%;
     margin: 20% auto;
 }
+
+input.invalid {
+    border: 1px solid red;
+}
+
+label.invalid {
+    padding-left: 16px;
+    padding-bottom: 2px;
+    font-weight: bold;
+    color: red;
+}
