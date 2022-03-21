@@ -1,7 +1,7 @@
 <?php
 include('./utils/db.php');
 include('./fonctions/reservationUse.php');
-include('./fonctions/marqueUse.php');
+include('./fonctions/materielUse.php');
 
 ?>
 
@@ -59,8 +59,8 @@ include('./fonctions/marqueUse.php');
                 <select id="marque" name="marque" class="form-control">
                     <option selected></option>
                     <?php
-                    $options = generateOptionHTML($pdo);
-                    foreach ($options as $option) {
+                    $options = generateOptionMarqueHTML($pdo);
+                    foreach($options as $option) {
                         echo $option;
                     }
                     ?>

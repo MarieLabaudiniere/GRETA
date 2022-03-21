@@ -51,7 +51,7 @@
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="index.php?page=home
                         ">Mes réservations</a></li>
-                        <li><a class="dropdown-item" href="index.php?page=reservation">Nouvelles réservations</a></li>
+                        <li><a class="dropdown-item" href="index.php?page=reservation">>Matériel dispo</a></li>
                     </ul>
                 </li>
             <?php } else {

@@ -14,6 +14,7 @@
     <script src="./public/js/messages_fr.min.js"></script>
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
     <script src="./public/js/control.js" defer></script>
+    <script src="./public/js/ajax.js" defer></script>
     <title>GRETA</title>
 </head>
 

@@ -65,6 +65,7 @@ function getListResa($pdoP, $dateDebut, $dateFin, $idMat) {
     $stmt->execute($paraSQL);
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
+
 //liste du matériels disponibles, c.a.d non réservé à la période demandé
 //avec les valeurs saisies dans le formulaire de recherche
 function getListMaterielDispo($pdoP, $vals)
@@ -92,27 +93,28 @@ function getListMaterielDispo($pdoP, $vals)
     $stmt->execute($paraSQL);
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
+
 //fonction qui crée un enregistrement en BD
 function createResa($pdoP, $vals)
 {
     //ATTENTION AVANT de créer en BD vérifier que la période choisie est toujours
     //disponible.
-    try {
-        $stmt = $pdoP->prepare("INSERT INTO reservations(ID_UTIL, ID_MAT_RESA, DATE_RESA, DATE_DEBUT_RESA, DATE_FIN_RESA)
-        VALUES (?, ?, NOW(), ?, ?)");
-        $stmt->execute([$_SESSION['id_util'], $vals['id_mat_resa'], $vals['date_debut_resa'], $vals['date_fin_resa']]);
+   
+        $idUtil = (isset($vals['id_util'])) ? $vals['id_util'] : $_SESSION['id_util'];
+        $stmt = $pdoP->prepare("INSERT INTO reservations(LIBELLE_RESA, ID_UTIL, ID_MAT_RESA, DATE_RESA, DATE_DEBUT_RESA, DATE_FIN_RESA)
+        VALUES (?, ?, ?, NOW(), ?, ?)");
+        $stmt->execute([$vals['libelle_resa'], $idUtil, $vals['id_mat_resa'], $vals['date_debut_resa'], $vals['date_fin_resa']]);
         $stmt->fetch();
-        return true;
-    } catch (PDOException $e) {
-        return false;
-    }
+        //return true;
+    
 }
+
 //fonction permettant de générer les événements du calendrier pour les réservations
 //d'un matériel dont l'id est passé en argument
 function getEvenementsResa($pdoP, $idResa)
 {
     try {
-        $stmt = $pdoP->prepare("SELECT ID_MAT_RESA, DATE_DEBUT_RESA, DATE_FIN_RESA from reservations 
+        $stmt = $pdoP->prepare("SELECT LIBELLE_RESA, ID_UTIL,ID_MAT_RESA, DATE_DEBUT_RESA, DATE_FIN_RESA from reservations 
     where ID_MAT_RESA=?");
         $stmt->execute([$idResa]);
         $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -121,8 +123,17 @@ function getEvenementsResa($pdoP, $idResa)
             $start = $result['DATE_DEBUT_RESA'];
             $end = $result['DATE_FIN_RESA'];
             $idMat = $result['ID_MAT_RESA'];
-            $listEventCalendar .= "{id: '$idMat', title: 'Reservé', start: '$start'
-        , end: '$end', backgroundColor: 'red', borderColor: 'red'},";
+            $title = "Réservé";
+            $color = "red";
+            if($result['ID_UTIL']==$_SESSION['id_util']) {
+                //la réservation a été faite par l'utilisateur connecté
+                //alors on affiche le libellé qu'il a saisi lors de sa résa.
+                $title = $result['LIBELLE_RESA'];
+                if(is_null($title)) $title="ma résa";
+                $color = 'green';
+            }
+            $listEventCalendar .= "{id: '$idMat', title: '".$title."', start: '$start'
+        , end: '$end', backgroundColor: '".$color."', borderColor: '".$color."'},";
         }
         $listEventCalendar = rtrim($listEventCalendar, ",");
         $listEventCalendar .= "]";
