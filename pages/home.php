@@ -1,7 +1,6 @@
 <?php
 include('./utils/db.php');
 include('./fonctions/materielUse.php');
-
 ?>
 <p class="lead text-center font-weight-bold">Recherche d'un matériel</p>
 <div class="container mt-3">
@@ -33,6 +32,8 @@ include('./fonctions/materielUse.php');
 </div>
 
 <script>
+    //génération de la requête HTTP qui va dynamiquement charger le contenu
+    //de la liste déroulante correspondant au type de matériel
     function requestSelect() {
         const oSelect = document.querySelector('#cat_materiel');
         const value = oSelect.options[oSelect.selectedIndex].value;
@@ -50,14 +51,16 @@ include('./fonctions/materielUse.php');
         xhr.open("GET", "request/listTypeMat.php?idCat=" + value, true);
         xhr.send();
     }
-
+    //fonction appeler dans le cas où le serveur à envoyer un retour positif
+    //pour la requête listTypeMat
     function readDataSelect(oData) {
         const oSelect = document.getElementById("type_materiel");
         oSelect.innerHTML = oData;
         //JQ
         //$('#type-materiel').html(oData);
     }
-
+    //génération de la requête HTTP qui va dynamiquement construire le tableau
+    //de résultats
     function requestSearch() {
         oSelect = document.querySelector('#type_materiel');
         const valueTypeMat = oSelect.options[oSelect.selectedIndex].value;
@@ -79,7 +82,8 @@ include('./fonctions/materielUse.php');
         xhr.open("GET", "request/tabMat.php?type_materiel=" + valueTypeMat + "&libelle_mat=" + valueLib, true);
         xhr.send();
     }
-
+    //fonction appeler dans le cas où le serveur à envoyer un retour positif
+    //pour la requête tabMat
     function readDataSearch(oData) {
         console.log("écriture du résultat");
         console.log(oData);

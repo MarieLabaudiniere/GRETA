@@ -49,8 +49,7 @@
                 <li class="nav-item dropdown">
                     <a class="nav-link  dropdown-toggle" href="#" data-toggle="dropdown">Réservation </a>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="index.php?page=home
-                        ">Mes réservations</a></li>
+                        <li><a class="dropdown-item" href="index.php?page=reservationsUtilisateur">Mes réservations</a></li>
                         <li><a class="dropdown-item" href="index.php?page=reservation">>Matériel dispo</a></li>
                     </ul>
                 </li>

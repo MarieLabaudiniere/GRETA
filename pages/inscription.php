@@ -1,3 +1,20 @@
+
+<?php
+//chargement des paramètres de la BD
+include('./utils/db.php');
+//chargement des fonctions liées à la manipulation des données utilisateur
+include('./fonctions/utilisateurUse.php');
+if(isset($_POST['register-submit'])) {//si ce paramètre existe alors c'est que l'utilisateur
+    //a soumis le formulaire
+    try {
+        createUser($pdo, $_POST);
+        header('Location: index.php?page=authentif&ok=1');
+        die();
+    } catch(PDOException $e){
+        echo "Erreur  : " . $e->getMessage();
+    }
+}
+?>
 <!-- formulaire permettant de créer un nouvel identifiant-->
 <div class="container mt-3">
     <div class="row justify-content-center">
@@ -6,7 +23,7 @@
                 <div class="panel-body">
                     <div class="row">
                         <div class="col-lg-12">
-                            <form id="register-form" action="index.php?page=register" method="post" role="form">
+                            <form id="register-form" action="index.php?page=inscription" method="post" role="form">
                                 <div class="form-group">
                                     <input type="text" name="username" id="username" tabindex="1" class="form-control" placeholder="Username" value="">
                                 </div>
