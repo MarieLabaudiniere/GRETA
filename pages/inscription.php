@@ -58,7 +58,6 @@ if(isset($_POST['register-submit'])) {//si ce paramètre existe alors c'est que 
     </div>
 </div>
 <script>
-    
     $('#register-form').validate({
         rules: {
             username: {

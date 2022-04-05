@@ -35,7 +35,7 @@ if (isset($_SESSION["etatConnexion"]) && $_SESSION["etatConnexion"] == "1") {
                                                 }
                                                 ?>
                                                 <input type="submit" name="login-submit" id="login-submit" tabindex="4" class="form-control btn-secondary" value="Connexion">
-
+                                                <a href="#" onclick="redirection()">Mot de passe oublié</a>
                                             </div>
                                         </div>
                                     </div>
@@ -51,15 +51,20 @@ if (isset($_SESSION["etatConnexion"]) && $_SESSION["etatConnexion"] == "1") {
     </div>
 <?php } ?>
 <script>
+    function redirection() {
+        const userNameVal = $('#username').val();
+        window.location.href = "index.php?page=pwdForget&username=" + userNameVal;
+    }
+
     function afficher() {
         const input = document.getElementById("password");
         const img = document.getElementById("eye");
         if (input.type === "password") {
             input.type = "text";
-            img.src="./public/medias/eye-slash.svg";
+            img.src = "./public/medias/eye-slash.svg";
         } else {
             input.type = "password";
-            img.src="./public/medias/eye.svg";
+            img.src = "./public/medias/eye.svg";
         }
     }
 </script>

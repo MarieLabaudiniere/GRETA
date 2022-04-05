@@ -10,7 +10,7 @@
     <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
     <script src='./fullcalendar/main.js'></script>
     <script src='./public/js/calendrier.js'></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="./public/js/jquery-3.6.0.min.js"></script>
     <script src="./public/js/jquery.validate.min.js"></script>
     <script src="./public/js/messages_fr.min.js"></script>
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>

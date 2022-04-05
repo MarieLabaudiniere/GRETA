@@ -11,7 +11,7 @@ include('./fonctions/materielUse.php');
         <div class="modal-content">
             <div class="modal-header">
                 <h5> Nouvelle Réservation </h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <button id=btnModal type="button" class="close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -60,7 +60,7 @@ include('./fonctions/materielUse.php');
                     <option selected></option>
                     <?php
                     $options = generateOptionMarqueHTML($pdo);
-                    foreach($options as $option) {
+                    foreach ($options as $option) {
                         echo $option;
                     }
                     ?>
@@ -96,29 +96,7 @@ if (isset($_POST['fastSearch'])) {
     if (isset($_POST['fastSearchValue'])) {
         //affichage du résultat de la recherche rapide
         $results = getListMaterielDispoFast($pdo, $_POST['fastSearchValue']);
-        if (is_null($results) || count($results) == 0) {
-            echo "<p>pas de résultat</p>";
-        } else {
-            echo "<div class=\"container mt-3\"><table class=\"table\">
-                    <thead class=\"thead-light\">
-                        <tr>
-                        <th>Libellé mat</th>
-                        <th>Réservation rapide</th>
-                        <th>Réservation</th>
-                        </tr>
-                        </thead>
-                    <tbody>";
-            foreach ($results as $result) {
-                $idMat = $result['ID_MAT'];
-                echo "<tr>";
-                echo "<td>" . $result['LIBELLE_MAT'] . "</td>";
-                echo '<td><a href="#" onclick="reportData(' . $idMat . ',\''
-                    . $result['LIBELLE_MAT'] . '\',\'\',\'\')" data-toggle="modal" data-target="#popup"><img src="./public/medias/calendar-check.svg"></a></td>';
-                echo '<td><a href="index.php?page=reservationCalendar&id_mat=' . $idMat . '"><img src="./public/medias/calendar.svg"></a></td>';
-                echo "<tr>";
-            }
-            echo "</table></div>";
-        }
+        creatTableResult($results);
     } else {
         echo "<div class='alert alert-danger text-center mt-2' role='alert'>
         Vous devez saisir une chaine de caractères pour la recherche rapide</div>";
@@ -128,7 +106,30 @@ if (isset($_POST['fastSearch'])) {
 if (isset($_POST['searchAdvance'])) {
     //print_r($_POST);
     $results = getListMaterielDispo($pdo, $_POST);
-    if (is_null($results) || count($results) == 0) {
+    creatTableResult($results);
+}
+?>
+<script>
+    $(function() {
+        $('#btnModal').click(function() {
+            $('#popup').hide();
+        });
+    });
+
+    function reportData(idMat) {
+        const dateDeb = "<?php echo @$_POST['date_debut_resa'] ?>";
+        const dateFin = "<?php echo @$_POST['date_fin_resa'] ?>";
+        $('#popIdMat').val(idMat);
+        const libelle = $("tr[data-id=" + idMat + "] > td[data-column=1]").text();
+        $('#popLibelleResa').val(libelle);
+        $('#popDateDeb').val(dateDeb);
+        $('#popDateFin').val(dateFin);
+        $('#popup').show();
+    }
+</script>
+<?php
+function creatTableResult($resultsP) {
+    if (is_null($resultsP) || count($resultsP) == 0) {
         echo '<div class="text-center m-2">pas de résultat</div>';
     } else {
         echo "<div class=\"container mt-3\"><table class=\"table\">
@@ -140,29 +141,15 @@ if (isset($_POST['searchAdvance'])) {
                         </tr>
                         </thead>
                     <tbody>";
-        foreach ($results as $result) {
+        foreach ($resultsP as $result) {
             $idMat = $result['ID_MAT'];
-            echo "<tr>";
-            echo "<td>" . $result['LIBELLE_MAT'] . "</td>";
-            echo '<td><a href="#" onclick="reportData(' . $idMat . ',\''
-                . $result['LIBELLE_MAT'] . '\',\'' . $_POST['date_debut_resa'] . '\',\''
-                . $_POST['date_fin_resa'] . '\')" data-toggle="modal" data-target="#popup"><img src="./public/medias/calendar-check.svg"></a></td>';
+            echo "<tr data-id=" . $idMat . ">";
+            echo "<td data-column=1>" . $result['LIBELLE_MAT'] . "</td>";
+            echo '<td data-column=2><a href="#" onclick="reportData(' . $idMat . ')"><img src="./public/medias/calendar-check.svg"></a></td>';
             echo '<td><a href="index.php?page=reservationCalendar&id_mat=' . $idMat . '"><img src="./public/medias/calendar.svg"></a></td>';
             echo "<tr>";
         }
-        echo "</table></div>";
+        echo "</tbody></table></div>";
     }
 }
 ?>
-<script>
-    function reportData(idMat, libelleMat, dateDebutResa, dateFinResa) {
-        const champId = document.getElementById('popIdMat');
-        champId.value = idMat;
-        const champLib = document.getElementById('popLibelleResa');
-        champLib.value = libelleMat;
-        const champDateDeb = document.getElementById('popDateDeb');
-        champDateDeb.value = dateDebutResa;
-        const champDateFin = document.getElementById('popDateFin');
-        champDateFin.value = dateFinResa;
-    }
-</script>

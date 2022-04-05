@@ -7,7 +7,13 @@ function getFormatFr(oDate) {
     //avec des 0 pour atteindre une longueur de 2
     const mm = String(oDate.getMonth() + 1).padStart(2, '0');
     const yyyy = oDate.getFullYear();
-    dateStrFr =  dd + "/" + mm  + "/" + yyyy ;
+    dateStrFr = dd + "/" + mm + "/" + yyyy;
+    return dateStrFr;
+}
+
+function getFormatDateHeureFr(oDate) {
+    let dateStrFr = getFormatFr(oDate);
+    dateStrFr += " " + oDate.getHours() + ":" + oDate.getMinutes() + ":" + oDate.getSeconds();
     return dateStrFr;
 }
 

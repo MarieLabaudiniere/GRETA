@@ -42,6 +42,15 @@ function generateOptionTypeMatHTML($pdoP,$idCatMat)
     }
     return $optionsHTML;
 }
+//fonction qui génère la liste déroulante des types de matériel correspondant 
+//à la catégorie passée en paramètre
+function getListTypeMatJSON($pdoP,$idCatMat)
+{
+    $stmt = $pdoP->prepare("SELECT ID_TYPE_MAT, LIBELLE_TYPE_MAT FROM types_materiel WHERE ID_CAT_MAT=?");
+    $stmt->execute([$idCatMat]);
+    $options = [];//tableau qui va contenir toutes les options HTML
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
 
 //retourne la liste des matériels 
 function getListMateriel($pdoP, $values){
