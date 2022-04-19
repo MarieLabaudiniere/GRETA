@@ -122,12 +122,12 @@ function updateResa($pdoP, $libelleResa, $idResa) {
 
 //fonction permettant de générer les événements du calendrier pour les réservations
 //d'un matériel dont l'id est passé en argument
-function getEvenementsResa($pdoP, $idResa, $debut, $fin, $idUtil)
+function getEvenementsResa($pdoP, $idMat, $debut, $fin, $idUtil)
 {
     try {
         $stmt = $pdoP->prepare("SELECT DISTINCT LIBELLE_RESA, ID_UTIL,ID_RESA, DATE_DEBUT_RESA, DATE_FIN_RESA from reservations 
     where ID_MAT_RESA=? AND DATE_DEBUT_RESA BETWEEN ? AND ?");
-        $stmt->execute([$idResa, $debut, $fin]);
+        $stmt->execute([$idMat, $debut, $fin]);
         $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
         $reponse = array();
         foreach ($results as $result) {

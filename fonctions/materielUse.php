@@ -48,7 +48,6 @@ function getListTypeMatJSON($pdoP,$idCatMat)
 {
     $stmt = $pdoP->prepare("SELECT ID_TYPE_MAT, LIBELLE_TYPE_MAT FROM types_materiel WHERE ID_CAT_MAT=?");
     $stmt->execute([$idCatMat]);
-    $options = [];//tableau qui va contenir toutes les options HTML
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 

@@ -7,7 +7,8 @@ include('./fonctions/materielUse.php');
     <!--<form action="index.php?page=home" method="post" id="formSearchResa">-->
     <div class="row">
         <div class="col">
-            <select id="cat_materiel" name="cat_materiel" onchange="requestSelectAjaxLoad();" class="form-control">
+            <select id="cat_materiel" name="cat_materiel" onchange="requestSelectJQ
+            (this);" class="form-control">
                 <option selected></option>
                 <?php
                 echo generateOptionCatMatHTML($pdo);
@@ -32,6 +33,12 @@ include('./fonctions/materielUse.php');
     </div>
 
     <script>
+        $(function() {
+            $('#cat_materiel').change(function() {
+                $('#type_materiel').load('request/listTypeMat.php?idCat='+$('#cat_materiel').val());
+            });
+        });
+
         //génération de la requête HTTP qui va dynamiquement charger le contenu
         //de la liste déroulante correspondant au type de matériel et qui renvoie les données en HTML
         function requestSelect(oSelect) {
@@ -51,6 +58,7 @@ include('./fonctions/materielUse.php');
             xhr.open("GET", "request/listTypeMat.php?idCat=" + value, true);
             xhr.send();
         }
+        
         //génération de la requête HTTP qui va dynamiquement charger le contenu
         //de la liste déroulante correspondant au type de matériel et qui renvoie les données en HTML
         function requestSelectJSON(oSelect) {
@@ -71,8 +79,8 @@ include('./fonctions/materielUse.php');
             xhr.send();
         }
 
-        function requestSelectAjax() {
-            const value = $('#cat_materiel option:selected').val();
+        //fonction qui utilise JQuery
+        function requestSelectJQ(value) {
             const request = $.ajax({
                 //L'URL de la requête 
                 url: "request/listTypeMatJSON.php",
@@ -100,11 +108,13 @@ include('./fonctions/materielUse.php');
                 console.log(JSON.stringify(error));
             });
         }
-        function requestSelectAjaxLoad(){
-            const value = $('#cat_materiel option:selected').val();
+
+        //fonction qui utilise la fonction load de JQuery
+        function requestSelectJQLoad(value){
             $("#type_materiel").load("request/listTypeMat.php?idCat=" + value);
         }
 
+        
         //fonction appeler dans le cas où le serveur à envoyer un retour positif
         //pour la requête listTypeMat
         function readDataSelect(oData) {

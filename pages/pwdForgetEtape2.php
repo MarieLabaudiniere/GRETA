@@ -4,11 +4,8 @@
 include('./utils/db.php');
 //chargement des fonctions liées à la manipulation des données utilisateur
 include('./fonctions/utilisateurUse.php');
-if (isset($_POST['recovery-submit'])) { //CAS où l'utilisateur valid son changement de mot de passe
-    reinitPwd($pdo, $_POST);
-    header('Location: index.php?page=authentif');
-    die();
-} else if (isset($_GET['token'])) { //CAS où l'utilisateur à cliquer sur le lien du message de l'email
+
+if (isset($_GET['token'])) { //CAS où l'utilisateur à cliqué sur le lien du message de l'email
     $infosToken = getInfosToken($pdo, $_GET['token']);
     if (empty($infosToken)) { //pas de jeton trouvé en BD
         echo "votre jeton n'existe pas, veuillez demander de nouveau une réinitialisation du mot de passe.";
@@ -40,7 +37,8 @@ if (isset($_POST['recovery-submit'])) { //CAS où l'utilisateur valid son change
 </form></div></div>';
         }
     }
-} else { //CAS où l'utilisateur débute sa demande de réinitialisation de mot de passe
+} else {
+    //CAS où l'utilisateur débute sa demande de réinitialisation de mot de passe
     $user = htmlspecialchars(@$_GET['username']);
     if (strlen($user) == 0) { //l'utilisateur n'a pas saisi son identifiant
         echo '<p class="ml-5">Vous devez saisir votre identifiant de connexion :</p>';
@@ -77,45 +75,6 @@ if (isset($_POST['recovery-submit'])) { //CAS où l'utilisateur valid son change
             echo "Échec de l'envoi de l'email. Veuillez vous adresser à l'administrateur.";
         }
     }
-} ?>
-<script>
-    //fonction qui vérifie que l'identifiant trouvé pour le token est le même que celui saisie par l'utilisateur
-    function verifUser(elem, valUserToken) {
-        const valUser = $('#username').val();
-        if (valUserToken != valUser) {
-            alert("l'identifant saisi n'est pas celui de la demande!");
-        }
-    }
-
-    $('#recovery-form').validate({
-        rules: {
-            username: {
-                required: true,
-                minlength: 2
-            },
-            password: {
-                required: true,
-            },
-            confirm_password: {
-                required: true,
-                equalTo: "#password"
-            }
-        },
-        messages: {
-            confirm_password: {
-                equalTo: "Vous devez saisir le même mot de passe."
-            }
-        },
-        errorClass: "invalid",
-        //onsubmit: false,
-        submitHandler: function(form) {
-            if (form.valid()) {
-                form.submit();
-            }
-            return false;
-        }
-    });
-    $.validator.addMethod('password', function(value) {
-        return /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^a-zA-Z\d])\S{12,50}$/.test(value);
-    }, 'Le mot de passe doit avoir plus de 12 caractères, au moins une majuscule, une minuscule, un chiffre et un caractère spécial');
-</script>
+}
+?>
+<script src="public/js/pwdForget.js"></script>

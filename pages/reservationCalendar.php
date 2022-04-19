@@ -1,14 +1,19 @@
-<?php include('./fonctions/reservationUse.php');
+<?php
+include('./utils/db.php');
+include('./fonctions/reservationUse.php');
 $idMat = $_GET['id_mat'];
 $libelleMat = $_GET['libelle_mat'];
 $userId = $_SESSION['id_util'];
 ?>
-<p class="lead text-center font-weight-bold">Calendrier de réservation pour 
-    <?php echo $libelleMat ?></p>
-<script>initialisationCalendar(<?php echo $userId ?>, <?php echo $idMat ?>)</script>
-<div id='calendrier'></div>
+<script src="public/js/calendrier.js"></script>
+<script>
+    initialisationCalendar(<?php echo $userId ?>, <?php echo $idMat ?>);
+</script>
+<p class="lead text-center font-weight-bold">Calendrier de réservation pour <?php echo $libelleMat ?></p>
+<!-- div qui permet d'afficher le calendrier -->
+<div id='calendrier'"></div>
 <!--div qui apparait après l'enregistrement de la résa en BD ou de sa suppression-->
-<div id='msg'></div>
+<div id='msg' style="display:none"></div>
 
 <!--MODAL qui s'affiche lorsque l'on clique sur un évènement-->
 <div id="calendarModal" class="modal fade">

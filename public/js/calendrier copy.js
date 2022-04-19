@@ -55,7 +55,7 @@ function initialisationCalendar(idUtilP, idMatP) {
                         + "Date fin : " + getFormatFr(eventObj.end) + "<br><input type=\"text\" id=\"labelModif\" value=\"" + eventObj.title + "\">";
                     $('#modalBody').html(contenu);
                     $('#calendarModal').modal();
-                    //suppression des évènements click sur les liens (autrement les évènements s'accumulent)
+                    //suppression des évènements click sur les liens
                     $("#suppr").off("click");
                     $("#modif").off("click");
                     //création des évènements click sur les liens
@@ -72,6 +72,40 @@ function initialisationCalendar(idUtilP, idMatP) {
                     alert("vous ne pouvez pas modifier cette réservation car eventObj.userId=" + eventObj.userId + " et idUtil=" + idUtilP);
                 }
             }
+            // events: [
+            //     {
+            //         title: 'formation GRETA',
+            //         start: '2022-04-11',
+            //         end: '2022-04-22'
+            //     },
+            //     {
+            //         title: 'Valentin',
+            //         start: '2022-04-19',
+            //         end: '2022-04-20',
+            //         backgroundColor: 'yellow',
+            //         borderColor: 'yellow',
+            //         textColor: 'black'
+            //     },
+            //     {
+            //         title: 'Repas',
+            //         start: '2022-04-12 12:00',
+            //         end: '2022-04-12 13:00',
+            //         allDay: true,
+            //         backgroundColor: 'red',
+            //         borderColor: 'red',
+            //         textColor: 'black'
+            //     },
+            //     {
+            //         title: 'Projet',
+            //         start: '2022-04-12 13:30',
+            //         end: '2022-04-12 14:30',
+            //         allDay: true,
+            //         backgroundColor: 'green',
+            //         borderColor: 'green',
+            //         textColor: 'black'
+            //     }
+
+            // ]
         });
         calendar.render();
     });
@@ -98,76 +132,69 @@ function isAllreadyExist(calendarP, infoP) {
     });
     return isExist;
 }
-
-//envoi de la requête HTTP qui va permettre d'insérer une réservation en BD
+//génération de la requête HTTP qui va permettre d'insérer une réservation en BD
 function requestInsert(eventP, calendarP) {
-    //traduction de la date pour qu'elle soit compatible avec la BD
     const dateDebStr = getFormatMySQL(eventP.start);
     const dateFinStr = getFormatMySQL(eventP.end);
-    const data = new FormData();
-    data.append("id_util", eventP.extendedProps.idUtil);
-    data.append("libelle_resa", eventP.title);
-    data.append("id_mat_resa", eventP.extendedProps.idMat);
-    data.append("date_debut_resa", dateDebStr);
-    data.append("date_fin_resa", dateFinStr);
-    fetch("request/insertResa.php", {
-        method: "POST",
-        body: data
-    })
-    .then((response)=>response.text())
-    .then((content)=>{
-        //affichage d'une div montrant à l'utilisateur que sa réservation a bien été prise en compte pendant 2 secondes.
-        $('#msg').text("Evènement enregistré").fadeIn().delay(2000).fadeOut();
-        //affichage de l'id de la résa créé
-        console.log("création de la résa : id=" + content);
-        eventP.id = content;
-        //BUG fullCalndar doublons créés si on ne le supprime pas.
-        eventP.remove();
-        //rafraichissement des évènements du calendrier
-        calendarP.refetchEvents();
-    })
-    .catch((error)=>console.log(error));
+    const paras = "id_util=" + eventP.extendedProps.idUtil + "&libelle_resa="
+        + eventP.title + "&id_mat_resa=" + eventP.extendedProps.idMat
+        + "&date_debut_resa=" + dateDebStr + "&date_fin_resa=" + dateFinStr;
+    const xhr = getXMLHttpRequest();
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState == 4 && xhr.status == 200) {
+            //affichage d'une div montrant à l'utilisateur que sa réservation a bien été prise en compte pendant 2 secondes.
+            $('#msg').text("Evènement enregistré").fadeIn().delay(2000).fadeOut();
+            //affichage de l'id de la résa créé
+            console.log("création de la résa : id=" + xhr.responseText);
+            eventP.id = xhr.responseText;
+            //BUG fullCalndar doublons créés si on ne le supprime pas.
+            eventP.remove();
+            //rafraichissement des évènements du calendrier (récupération en BD avec l'url spécifiée dans la propriété url de events)
+            calendarP.refetchEvents();
+        }
+    };
+    xhr.open("POST", "request/insertResa.php", true);
+    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    xhr.send(paras);
 }
 
 //génération de la requête qui va permettre de supprimer une réservation du calendrier
 function requestDelete(info) {
-    const data = new FormData();
-    data.append("id_resa", info.event.id);
-    fetch("request/deleteResa.php", {
-        method: "POST",
-        body: data
-    })
-    .then((response)=>response.text())
-    .then((content)=>{
-        //suppression de l'évènement du calendrier
-        info.event.remove();
-        //affichage d'une div montrant à l'utilisateur que sa réservation a bien été supprimé pendant 2 secondes.
-        $('#msg').text("Enregistrement supprimé").fadeIn().delay(2000).fadeOut();
-        //affichage de la réponse du serveur pour le débuggage
-        console.log(content);
-        console.log("delete id_resa " + info.event.id);
-    });
-}
+    const xhr = getXMLHttpRequest();
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState == 4 && xhr.status == 200) {
+            //suppression de l'évènement du calendrier
+            info.event.remove();
+            //affichage d'une div montrant à l'utilisateur que sa réservation a bien été supprimé pendant 2 secondes.
+            $('#msg').text("Enregistrement supprimé").fadeIn().delay(2000).fadeOut();
+            //affichage de la réponse du serveur pour le débuggage
+            console.log(xhr.responseText);
+            console.log("delete id_resa " + info.event.id);
+        }
+    };
 
+    xhr.open("POST", "request/deleteResa.php", true);
+    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    xhr.send("id_resa=" + info.event.id);
+}
 //génération de la requête qui va permettre de supprimer une réservation du calendrier
 function requestUpdate(info, libelleP, calendarP) {
-    const data = new FormData();
-    data.append("id_resa", info.event.id);
-    data.append("libelle_resa", libelleP);
-    fetch("request/updateResa.php", {
-        method: "POST",
-        body: data
-    })
-    .then((response)=>response.text())
-    .then((content)=>{
-        //modification du libellé
-        info.event.title = libelleP;
-        //rafraichissement des évènements du calendrier (récupération en BD avec l'url spécifiée dans la propriété url de events)
-        calendarP.refetchEvents();
-        //affichage d'une div montrant à l'utilisateur que sa réservation a bien été supprimé pendant 2 secondes.
-        $('#msg').text("Enregistrement modifié").fadeIn().delay(2000).fadeOut();
-        //affichage de la réponse du serveur pour le débuggage
-        console.log(content);
-        console.log("update " + info.event.id + " avec le libellé " + libelleP);
-    });
+    const xhr = getXMLHttpRequest();
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState == 4 && xhr.status == 200) {
+            //suppression de l'évènement du calendrier
+            info.event.title = libelleP;
+            //rafraichissement des évènements du calendrier (récupération en BD avec l'url spécifiée dans la propriété url de events)
+            calendarP.refetchEvents();
+            //affichage d'une div montrant à l'utilisateur que sa réservation a bien été supprimé pendant 2 secondes.
+            $('#msg').text("Enregistrement modifié").fadeIn().delay(2000).fadeOut();
+            //affichage de la réponse du serveur pour le débuggage
+            console.log(xhr.responseText);
+            console.log("update " + info.event.id + " avec le libellé " + libelleP);
+        }
+    };
+
+    xhr.open("POST", "request/updateResa.php", true);
+    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    xhr.send("id_resa=" + info.event.id + "&libelle_resa=" + libelleP);
 }

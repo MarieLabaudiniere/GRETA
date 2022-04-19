@@ -44,7 +44,7 @@ include('./fonctions/materielUse.php');
             <form action="index.php?page=reservation" method="post" id="custom-search-form" class="form-search form-horizontal pull-right">
                 <div class="input-append span12">
                     <input name="fastSearchValue" type="text" class="search-query" placeholder="Search">
-                    <button name="fastSearch" type="submit" class="btn"><img src="./public/medias/search.svg"></i></button>
+                    <button name="fastSearch" type="submit" class="btn"><img src="./public/medias/search.svg" alt="recherche"></i></button>
                 </div>
             </form>
         </div>
@@ -104,7 +104,6 @@ if (isset($_POST['fastSearch'])) {
 }
 //CAS DE LA RECHERCHE AVANCEE
 if (isset($_POST['searchAdvance'])) {
-    //print_r($_POST);
     $results = getListMaterielDispo($pdo, $_POST);
     creatTableResult($results);
 }
@@ -126,6 +125,13 @@ if (isset($_POST['searchAdvance'])) {
         $('#popDateFin').val(dateFin);
         $('#popup').show();
     }
+    $('#register-form').validate({
+        rules: {
+            password: {
+                
+            }
+        }
+    })
 </script>
 <?php
 function creatTableResult($resultsP) {
