@@ -7,9 +7,9 @@ $userId = $_SESSION['id_util'];
 ?>
 <script src="public/js/calendrier.js"></script>
 <script>
-    initialisationCalendar(<?php echo $userId ?>, <?php echo $idMat ?>);
+    initialisationCalendar(<?php echo htmlspecialchars($userId) ?>, <?php echo htmlspecialchars($idMat) ?>);
 </script>
-<p class="lead text-center font-weight-bold">Calendrier de réservation pour <?php echo $libelleMat ?></p>
+<p class="lead text-center font-weight-bold">Calendrier de réservation pour <?php echo htmlspecialchars($libelleMat) ?></p>
 <!-- div qui permet d'afficher le calendrier -->
 <div id='calendrier'"></div>
 <!--div qui apparait après l'enregistrement de la résa en BD ou de sa suppression-->

@@ -116,8 +116,8 @@ if (isset($_POST['searchAdvance'])) {
     });
 
     function reportData(idMat) {
-        const dateDeb = "<?php echo @$_POST['date_debut_resa'] ?>";
-        const dateFin = "<?php echo @$_POST['date_fin_resa'] ?>";
+        const dateDeb = "<?php echo htmlspecialchars(@$_POST['date_debut_resa']) ?>";
+        const dateFin = "<?php echo htmlspecialchars(@$_POST['date_fin_resa']) ?>";
         $('#popIdMat').val(idMat);
         const libelle = $("tr[data-id=" + idMat + "] > td[data-column=1]").text();
         $('#popLibelleResa').val(libelle);
