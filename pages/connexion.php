@@ -2,7 +2,7 @@
 //vérification de l'existance de l'identifiant et du mot de passe.
 //chargement des paramètres de la BD et connexion
 include('./utils/db.php');
-
+$redirectionAuthentif = 'Location: index.php?page=authentif';
 $username = htmlspecialchars($_POST['username']);
 $pwd = $_POST['password'];
 //réinitialisation du nb de tentatives
@@ -31,7 +31,7 @@ if ($result) {
         //si nb tentative >=4 alors bloquer QUOI qu'il arrive
         //la connexion
         $_SESSION["timeNextTentative"] = $timeBD + $delaisAttente;
-        header('Location: index.php?page=authentif');
+        header($redirectionAuthentif);
         die();
     } else {
         if (password_verify($pwd, $pwdHashBD)) {
@@ -76,14 +76,14 @@ if ($result) {
                 }
             }
 
-            header('Location: index.php?page=authentif');
+            header($redirectionAuthentif);
             die();
         }
     }
 } else {
     // l'identifiant n'existe pas
     $_SESSION["etatConnexion"] = "0";
-    header('Location: index.php?page=authentif');
+    header($redirectionAuthentif);
     die();
 }
 

@@ -44,17 +44,19 @@ function getListMaterielDispoFast($pdoP, $val)
 }
 
 //fonction qui permet de vérifier si un matériel est disponible sur une période donnée
-function isDispo($pdoP, $dateDebut, $dateFin, $idMat) {
+function isDispo($pdoP, $dateDebut, $dateFin, $idMat)
+{
     $results = getListResa($pdoP, $dateDebut, $dateFin, $idMat);
     return count($results) == 0; //retourne vrai si aucune réservation trouvé
 }
 
 //retourne la liste des réservation pour un matériel sur une période donnée
-function getListResa($pdoP, $dateDebut, $dateFin, $idMat) {
+function getListResa($pdoP, $dateDebut, $dateFin, $idMat)
+{
     $paraSQL = [
         $idMat,
         $dateDebut, $dateFin,
-        $dateDebut, $dateFin, 
+        $dateDebut, $dateFin,
         $dateDebut, $dateFin
     ];
     $stmt = $pdoP->prepare("SELECT reservations.ID_MAT_RESA from reservations 
@@ -72,7 +74,7 @@ function getListMaterielDispo($pdoP, $vals)
 {
     $paraSQL = [
         $vals['date_debut_resa'], $vals['date_fin_resa'],
-        $vals['date_debut_resa'], $vals['date_fin_resa'], 
+        $vals['date_debut_resa'], $vals['date_fin_resa'],
         $vals['date_debut_resa'], $vals['date_fin_resa']
     ];
     $requeteSQL = "SELECT materiels.ID_MAT, materiels.LIBELLE_MAT FROM materiels 
@@ -99,22 +101,23 @@ function createResa($pdoP, $vals)
 {
     //ATTENTION AVANT de créer en BD vérifier que la période choisie est toujours
     //disponible.
-   //pas de capture d'erreur pour qu'elle puisse remonter
-        $idUtil = (isset($vals['id_util'])) ? $vals['id_util'] : $_SESSION['id_util'];
-        $stmt = $pdoP->prepare("INSERT INTO reservations(LIBELLE_RESA, ID_UTIL, ID_MAT_RESA, DATE_RESA, DATE_DEBUT_RESA, DATE_FIN_RESA)
+    //pas de capture d'erreur pour qu'elle puisse remonter
+    $idUtil = (isset($vals['id_util'])) ? $vals['id_util'] : $_SESSION['id_util'];
+    $stmt = $pdoP->prepare("INSERT INTO reservations(LIBELLE_RESA, ID_UTIL, ID_MAT_RESA, DATE_RESA, DATE_DEBUT_RESA, DATE_FIN_RESA)
         VALUES (?, ?, ?, NOW(), ?, ?)");
-        $stmt->execute([$vals['libelle_resa'], $idUtil, $vals['id_mat_resa'], $vals['date_debut_resa'], $vals['date_fin_resa']]);
-        return $pdoP->lastInsertId();
-    
+    $stmt->execute([$vals['libelle_resa'], $idUtil, $vals['id_mat_resa'], $vals['date_debut_resa'], $vals['date_fin_resa']]);
+    return $pdoP->lastInsertId();
 }
 
-function deleteResa($pdoP, $idResa) {
+function deleteResa($pdoP, $idResa)
+{
     //pas de capture d'erreur pour qu'elle puisse remonter
     $stmt = $pdoP->prepare("DELETE FROM reservations WHERE ID_RESA=?");
     $stmt->execute([$idResa]);
 }
 
-function updateResa($pdoP, $libelleResa, $idResa) {
+function updateResa($pdoP, $libelleResa, $idResa)
+{
     //pas de capture d'erreur pour qu'elle puisse remonter
     $stmt = $pdoP->prepare("UPDATE reservations SET LIBELLE_RESA = ? WHERE ID_RESA=?");
     $stmt->execute([$libelleResa, $idResa]);
@@ -132,17 +135,19 @@ function getEvenementsResa($pdoP, $idMat, $debut, $fin, $idUtil)
         $reponse = array();
         foreach ($results as $result) {
             $event = array();
-            $start = strtotime($result['DATE_DEBUT_RESA'])*1000;
-            $end = strtotime($result['DATE_FIN_RESA'])*1000;
+            $start = strtotime($result['DATE_DEBUT_RESA']) * 1000;
+            $end = strtotime($result['DATE_FIN_RESA']) * 1000;
             $idMat = $result['ID_RESA'];
             $title = "Réservé";
             $color = "red";
-            $editable = "false";//va permettre la modification ou suppression de l'évènement
-            if($result['ID_UTIL'] == $idUtil) {
+            $editable = "false"; //va permettre la modification ou suppression de l'évènement
+            if ($result['ID_UTIL'] == $idUtil) {
                 //la réservation a été faite par l'utilisateur connecté
                 //alors on affiche le libellé qu'il a saisi lors de sa résa.
                 $title = $result['LIBELLE_RESA'];
-                if(is_null($title)) $title="ma résa";
+                if (is_null($title)) {
+                    $title = "ma résa";
+                }
                 $color = "green";
                 $editable = "true";
             }
@@ -157,7 +162,7 @@ function getEvenementsResa($pdoP, $idMat, $debut, $fin, $idUtil)
             $event['allDay'] = 'true';
             //FIN définition des propriétés générales de l'évènement
             //définition des propriétés spécifiques
-            $event['extendedProps'] = ['userId'=> $idUtil];
+            $event['extendedProps'] = ['userId' => $idUtil];
             array_push($reponse, $event);
         }
         return $reponse;

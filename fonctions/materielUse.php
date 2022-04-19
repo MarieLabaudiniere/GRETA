@@ -21,7 +21,6 @@ function generateOptionCatMatHTML($pdoP)
     $stmt->execute();
     $optionsHTML = "";//tableau qui va contenir toutes les options HTML
     $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    $i = 0;//indice du tableau options
     foreach ($results as $result) {
         $optionsHTML .= '<option value="' . $result['ID_CAT_MAT'] . '">' . $result['LIBELLE_MAT'] . '</option>';
     }
@@ -36,7 +35,6 @@ function generateOptionTypeMatHTML($pdoP,$idCatMat)
     $stmt->execute([$idCatMat]);
     $optionsHTML = "";//tableau qui va contenir toutes les options HTML
     $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    $i = 0;//indice du tableau options
     foreach ($results as $result) {
         $optionsHTML .=  '<option value="' . $result['ID_TYPE_MAT'] . '">' . $result['LIBELLE_TYPE_MAT'] . '</option>';
     }
@@ -60,7 +58,9 @@ function getListMateriel($pdoP, $values){
     INNER JOIN marques ON marques.ID_MARQUE=materiels.ID_MARQUE";
     $typeMat = $values['type_materiel'];
     $libMat = $values['libelle_mat'];
-    if ($typeMat!="" || $libMat!="") $requeteSQL .= " WHERE ";
+    if ($typeMat!="" || $libMat!="") {
+        $requeteSQL .= " WHERE ";
+    }
     if ($typeMat != "") { //si l'utilisateur a filtré sur le type de matériel
         $requeteSQL .= " materiels.ID_TYPE_MAT=?";
         array_push($paraSQL, $typeMat);
