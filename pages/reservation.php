@@ -67,13 +67,13 @@ include('./fonctions/materielUse.php');
                 </select>
             </div>
             <div class="col">
-                <input type="text" name="libelle_mat" class="form-control" placeholder="Libelle matériel" value="<?php echo @$_POST['libelle_mat'] ?>">
+                <input type="text" name="libelle_mat" class="form-control" placeholder="Libelle matériel" value="<?php echo htmlspecialchars(@$_POST['libelle_mat']) ?>">
             </div>
             <div class="col">
-                <input type="date" id="date_debut_resa" name="date_debut_resa" class="form-control" placeholder="" value="<?php echo @$_POST['date_debut_resa'] ?>" required>
+                <input type="date" id="date_debut_resa" name="date_debut_resa" class="form-control" placeholder="" value="<?php echo htmlspecialchars(@$_POST['date_debut_resa']) ?>" required>
             </div>
             <div class="col">
-                <input type="date" id="date_fin_resa" name="date_fin_resa" class="form-control" placeholder="" value="<?php echo @$_POST['date_fin_resa'] ?>" required>
+                <input type="date" id="date_fin_resa" name="date_fin_resa" class="form-control" placeholder="" value="<?php echo htmlspecialchars(@$_POST['date_fin_resa']) ?>" required>
             </div>
             <div class="row">
                 <div class="col">
